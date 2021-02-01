@@ -1,0 +1,41 @@
+﻿<Window x:Class="Organizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Organizer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90*"></RowDefinition>
+            <RowDefinition Height="10*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="60*" MinWidth="480"></ColumnDefinition>
+            <ColumnDefinition Width="40*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Tasks}" SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                  Margin="10,10,174,0" CanUserAddRows="False"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Название">
+                    <DataGridTemplateColumn.CellTemplate >
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" 
+                            Foreground="{Binding Task, Converter={StaticResource TaskColorConverter}}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Дата" Binding="{Binding Path=Date, StringFormat=\{0:dd.MM.yyyy\}}" Width="90*" />
+                <DataGridCheckBoxColumn Header="Done" Binding="{Binding Path=IsComplete}" />
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="356,54,0,0" TextWrapping="Wrap" Text="{Binding CurrentTask.Name}" VerticalAlignment="Top" Width="114"/>
+        <TextBox HorizontalAlignment="Left" Height="44" Margin="356,91,0,0" TextWrapping="Wrap" Text="{Binding CurrentTask.Description}" VerticalAlignment="Top" Width="114"/>
+        <DatePicker SelectedDate="{Binding CurrentTask.Date}" DisplayDate="{Binding CurrentTask.Date}" HorizontalAlignment="Left" Margin="356,155,0,0" VerticalAlignment="Top" Width="114"/>
+        <Button Command="{Binding AddButton}" Content="Добавить" HorizontalAlignment="Left" Margin="356,194,0,0" VerticalAlignment="Top" Width="114"/>
+    </Grid>
+</Window>
