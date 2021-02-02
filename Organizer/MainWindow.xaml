@@ -4,9 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Organizer"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-        <Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90*"></RowDefinition>
             <RowDefinition Height="10*"></RowDefinition>
@@ -17,7 +18,7 @@
         </Grid.ColumnDefinitions>
 
         <DataGrid Grid.Row="0" Grid.Column="0" ItemsSource="{Binding Tasks}" SelectedItem="{Binding CurrentTask, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                  Margin="10,10,174,0" CanUserAddRows="False"
+                  CanUserAddRows="False"
                   AutoGenerateColumns="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Название">
@@ -33,9 +34,18 @@
 
             </DataGrid.Columns>
         </DataGrid>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="356,54,0,0" TextWrapping="Wrap" Text="{Binding CurrentTask.Name}" VerticalAlignment="Top" Width="114"/>
-        <TextBox HorizontalAlignment="Left" Height="44" Margin="356,91,0,0" TextWrapping="Wrap" Text="{Binding CurrentTask.Description}" VerticalAlignment="Top" Width="114"/>
-        <DatePicker SelectedDate="{Binding CurrentTask.Date}" DisplayDate="{Binding CurrentTask.Date}" HorizontalAlignment="Left" Margin="356,155,0,0" VerticalAlignment="Top" Width="114"/>
-        <Button Command="{Binding AddButton}" Content="Добавить" HorizontalAlignment="Left" Margin="356,194,0,0" VerticalAlignment="Top" Width="114"/>
+        <StackPanel Grid.Row="0" Grid.Column="1" >
+
+            <TextBox IsEnabled="{Binding ActiveText}" Margin="10" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="{Binding CurrentTask.Name}" Width="114"/>
+            <TextBox IsEnabled="{Binding ActiveText}" Margin="10" HorizontalAlignment="Left" Height="44" TextWrapping="Wrap" Text="{Binding CurrentTask.Description}" Width="114"/>
+            <DatePicker IsEnabled="{Binding ActiveText}" Margin="10" SelectedDate="{Binding CurrentTask.Date}" DisplayDate="{Binding CurrentTask.Date}" VerticalAlignment="Top" Width="114" HorizontalAlignment="Left" />
+            <Button Margin="10" Command="{Binding AddButton}" Content="Добавить" HorizontalAlignment="Left" Width="114" Grid.Column="1"/>
+            <Button IsEnabled="{Binding ActiveText}" Margin="10" Command="{Binding DeleteCurrentButton}" HorizontalAlignment="Left" Content="Удалить выбранное" Width="124" Grid.Column="1"/>
+            <Button Margin="10" Command="{Binding DeleteAllCompleteButton}" Content="Удалить все сделанные" Width="144" HorizontalAlignment="Left" />
+            <Button Margin="10,10,0,10" Command="{Binding Save}" Content="Сохранить изменения" Width="124" HorizontalAlignment="Left" />
+        </StackPanel>
+
+
+
     </Grid>
 </Window>

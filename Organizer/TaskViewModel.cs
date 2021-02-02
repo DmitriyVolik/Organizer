@@ -19,6 +19,10 @@ namespace Organizer
 
         private DateTime? _date { get; set; }
 
+        public int? Id { get; set; }
+
+
+
         public TaskViewModel Task
         {
             get => this;
@@ -28,6 +32,8 @@ namespace Organizer
         {
             get => !IsComplete && DateTime.Today > Date;
         }
+
+        
 
         private bool _isComplete;
 
@@ -40,7 +46,10 @@ namespace Organizer
                 _isComplete = value;
                 
                 OnPropertyChanged("IsComplete");
+                
                 OnPropertyChanged("Task");
+
+                
             }
         }
 
@@ -111,6 +120,6 @@ namespace Organizer
             return null;
         }
 
-
+       
     }
 }

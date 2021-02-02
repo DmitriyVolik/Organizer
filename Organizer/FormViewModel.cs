@@ -6,7 +6,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Threading;
+
 
 namespace Organizer
 {
@@ -19,6 +21,13 @@ namespace Organizer
 
         public readonly Database database;
 
+        public bool ActiveText
+        {
+            get => _currentTask != null;
+        }
+
+        
+
         public TaskViewModel CurrentTask
         {
             get
@@ -27,17 +36,24 @@ namespace Organizer
             }
             set
             {
+                var temp = _currentTask;
                 _currentTask = value;
+
+                OnPropertyChanged("ActiveText");
                 OnPropertyChanged("CurrentTask");
+
             }
         }
+
+        
+        
 
 
         public FormViewModel()
         {
             database = new Database(@"Data Source=.\SQLEXPRESS;Initial Catalog=Organizer;Integrated Security=True");
 
-            database.GetNews().ForEach(i => Tasks.Add(i));
+            database.GetTasks().ForEach(i => Tasks.Add(i));
         }
 
 
@@ -61,6 +77,78 @@ namespace Organizer
             }
         }
 
+        public RelayCommand Save
+        {
+            get
+            {
+                return new RelayCommand(
+                        obj =>
+                        {
+
+                            foreach (var item in Tasks)
+                            {
+                                database.Save(item);
+                            }
+
+                        }
+                    );
+            }
+        }
+
+
+        public RelayCommand DeleteCurrentButton
+        {
+            get
+            {
+                return new RelayCommand(
+                        obj =>
+                        {
+                            if (CurrentTask!=null)
+                            {
+                                database.Delete(CurrentTask);
+
+                                Tasks.Remove(CurrentTask);
+                            }
+                            
+
+                        }
+                    );
+            }
+        }
+
+        
+
+        public RelayCommand DeleteAllCompleteButton
+        {
+            get
+            {
+                return new RelayCommand(
+                        obj =>
+                        {
+                            List<TaskViewModel> temp = new List<TaskViewModel>();
+
+                            foreach (var item in Tasks)
+                            {
+                                if (item.IsComplete)
+                                {
+                                    temp.Add(item);
+                                }
+                            }
+
+                     
+
+                            foreach (var t in temp)
+                            {
+                                Tasks.Remove(t);
+
+                                database.Delete(t);
+                            }
+
+                        }
+                    );
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")
@@ -68,5 +156,6 @@ namespace Organizer
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
         }
+
     }
 }
